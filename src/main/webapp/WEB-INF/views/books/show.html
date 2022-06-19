@@ -43,13 +43,13 @@
     <div class="row">
         <div class="col-lg-8 col-md-10 col-sm-12 mx-auto mb-2">
             <h2 th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYearOfPublication()}">Book</h2>
-            <div class="mb-2" th:if="${book.getReaderId() != 0}">
-                <p th:text="${'The book is now at: ' + book.getReaderFullName()}">book</p>
+            <div class="mb-2" th:if="${book.getReader() != null}">
+                <p th:text="${'The book is now at: ' + book.getReader().getFullName()}">book</p>
                 <form th:method="PATCH" th:action="@{/books/{id}/take(id=${book.getId()})}">
                     <input class="btn btn-primary" type="submit" value="Take the book from the reader"/>
                 </form>
             </div>
-            <div class="mb-2" th:unless="${book.getReaderId() != 0}">
+            <div class="mb-2" th:unless="${book.getReader() != null}">
                 <form th:method="PATCH" th:action="@{/books/{id}/give(id=${book.getId()})}">
                     <label for="person">Choose a person:</label>
                     <select class="form-control mb-2" th:object="${person}" th:field="*{id}" id="person">

@@ -40,11 +40,11 @@
     <div class="row">
         <div class="col-lg-8 col-md-10 col-sm-12 mx-auto mb-2">
             <h1 th:text="${person.getFullName() + ' ' + person.getYearOfBirth()}">Person</h1>
-            <div th:unless="${#lists.isEmpty(person.getBookList())}">
+            <div th:unless="${#lists.isEmpty(person.getBooks())}">
                 <p style="font-size: 120%">List of user's books</p>
                 <table class="table table-striped">
                     <tbody>
-                    <tr scope="row" th:each="book : ${person.getBookList()}">
+                    <tr scope="row" th:each="book : ${person.getBooks()}">
                         <td>
                             <a th:href="@{/books/{id}(id=${book.getId()})}"
                                th:text="${book.getTitle()}">title</a>
@@ -62,7 +62,7 @@
                 </table>
             </div>
 
-            <p style="font-size: 120%" th:if="${#lists.isEmpty(person.getBookList())}">There are no books</p>
+            <p style="font-size: 120%" th:if="${#lists.isEmpty(person.getBooks())}">There are no books</p>
             <form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
                 <input class="btn btn-primary" type="submit" value="Delete"/>
                 <a class="btn btn-secondary"style="text-decoration:none" th:href="@{/people/{id}/edit(id=${person.getId()})}">Edit</a>
