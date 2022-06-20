@@ -91,4 +91,16 @@ public class BooksController {
         booksService.giveBookFromReader( bookId, person);
         return "redirect:/books/{id}";
     }
+
+    @GetMapping("/search")
+    public String search(Model model) {
+        model.addAttribute("books", booksService.findBySearch(""));
+        return "books/search";
+    }
+
+    @PostMapping("/search")
+    public String findBooks(Model model, @RequestParam("searchQuery") String searchQuery) {
+        model.addAttribute("books",booksService.findBySearch(searchQuery));
+        return "/books/search";
+    }
 }

@@ -1,11 +1,11 @@
 package spring.models;
 
-
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.Date;
 
 @Entity
 @Table(name = "book")
@@ -28,6 +28,13 @@ public class Book {
     @Min(value = 1500, message = "Year of publication should be greater than 1500")
     @Column(name = "year_of_publication")
     private int yearOfPublication;
+
+    @Column(name = "give_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date giveAt;
+
+    @Transient
+    private boolean isOverdue;
 
     @ManyToOne
     @JoinColumn(name = "person_id", referencedColumnName = "person_id")
@@ -73,5 +80,24 @@ public class Book {
 
     public void setReader(Person reader) {
         this.reader = reader;
+    }
+
+    public Date getGiveAt() {
+        return giveAt;
+    }
+
+    public void setGiveAt(Date giveAt) {
+        this.giveAt = giveAt;
+    }
+
+    public boolean isOverdue() {
+        Date date = getGiveAt();
+        if(date == null) return false;
+        if(new Date().getTime() - date.getTime() >= 864000000L)  return true;
+        else return false;
+    }
+
+    public void setOverdue(boolean overdue) {
+        isOverdue = overdue;
     }
 }

@@ -9,6 +9,7 @@ import spring.models.Book;
 import spring.models.Person;
 import spring.repositories.BooksRepository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +46,10 @@ public class BooksService {
         return fondBook.orElse(null);
     }
 
+    public List<Book> findBySearch(String searchQuery){
+        return booksRepository.findByTitleContainingIgnoreCase(searchQuery);
+    }
+
     @Transactional
     public void save(Book newBook) {
         booksRepository.save(newBook);
@@ -63,11 +68,17 @@ public class BooksService {
 
     @Transactional
     public void  takeBookFromReader(int bookId) {
-        booksRepository.findById(bookId).ifPresent(book -> book.setReader(null));
+        booksRepository.findById(bookId).ifPresent(book -> {
+            book.setReader(null);
+            book.setGiveAt(null);
+        });
     }
 
     @Transactional
     public void giveBookFromReader(int bookId, Person person) {
-        booksRepository.findById(bookId).ifPresent(book -> book.setReader(person));
+        booksRepository.findById(bookId).ifPresent(book -> {
+            book.setReader(person);
+            book.setGiveAt(new Date());
+        });
     }
 }

@@ -8,7 +8,7 @@
             crossorigin="anonymous"
     />
     <meta charset="UTF-8">
-    <title>Person</title>
+    <title>Search</title>
     <style>a {text-decoration: none;}</style>
 </head>
 <body>
@@ -33,7 +33,7 @@
                     <a class="nav-link" href="/books">Books</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/books/search">Search</a>
+                    <a class="nav-link active" href="/books/search">Search</a>
                 </li>
             </ul>
         </div>
@@ -42,36 +42,44 @@
 <div class="container text-center">
     <div class="row">
         <div class="col-lg-8 col-md-10 col-sm-12 mx-auto mb-2">
-            <h1 th:text="${person.getFullName() + ' ' + person.getYearOfBirth()}">Person</h1>
-            <div th:unless="${#lists.isEmpty(person.getBooks())}">
-                <p style="font-size: 120%">List of user's books</p>
+            <form class="form-inline d-flex justify-content-center md-form form-sm mt-0" th:method="POST" th:action="@{/books/search}">
+                <i class="fas fa-search" aria-hidden="true"></i>
+                <input class="form-control form-control-sm ml-3 w-75 mb-3" type="text" placeholder="Search"
+                       aria-label="Search" name="searchQuery"/>
+                <input class="btn btn-primary mb-3" type="submit" value="Search"/>
+            </form>
+
+            <div th:unless="${#lists.isEmpty(books)}">
+                <p style="font-size: 120%" th:text="'Books found by your request: ' + ${books.size()}"/>
                 <table class="table table-striped">
                     <tbody>
-                    <tr scope="row" th:each="book : ${person.getBooks()}">
+                    <tr scope="row" th:each="book : ${books}">
                         <td>
                             <a th:href="@{/books/{id}(id=${book.getId()})}"
-                               th:style = "${book.isOverdue()}? 'color: red'"
                                th:text="${book.getTitle()}">title</a>
                         </td>
                         <td>
                             <a th:href="@{/books/{id}(id=${book.getId()})}"
-                               th:style = "${book.isOverdue()}? 'color: red'"
                                th:text="${book.getAuthor()}">author</a>
                         </td>
                         <td>
                             <a th:href="@{/books/{id}(id=${book.getId()})}"
-                               th:style = "${book.isOverdue()}? 'color: red'"
                                th:text="${book.getYearOfPublication()}">year</a>
+                        </td>
+                        <td>
+                            <a th:href="@{/books/{id}(id=${book.getId()})}"
+                               th:if="${book.getReader() != null}"
+                               th:text="${'Book is now at: ' + book.getReader().getFullName()}"/>
+                            <a th:href="@{/books/{id}(id=${book.getId()})}"
+                               th:if="${book.getReader() == null}"
+                               th:text="${'The book is free'}"/>
                         </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
-            <p style="font-size: 120%" th:if="${#lists.isEmpty(person.getBooks())}">There are no books</p>
-            <form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
-                <input class="btn btn-primary" type="submit" value="Delete"/>
-                <a class="btn btn-secondary"style="text-decoration:none" th:href="@{/people/{id}/edit(id=${person.getId()})}">Edit</a>
-            </form>
+
+            <p style="font-size: 120%" th:if="${#lists.isEmpty(books)}">Books not found</p>
         </div>
     </div>
 </div>
