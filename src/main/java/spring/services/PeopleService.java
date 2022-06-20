@@ -52,9 +52,4 @@ public class PeopleService {
     public Optional<Person> checkByFullName(String fullName){
         return peopleRepository.findPersonByFullName(fullName);
     }
-
-    @Transactional
-    public Optional<Person> checkById(int id) {
-        return peopleRepository.findById(id);
-    }
 }
